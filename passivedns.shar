@@ -6,78 +6,16 @@
 # This archive contains:
 #
 #	passivedns
-#	passivedns/Makefile
-#	passivedns/pkg-descr
-#	passivedns/pkg-plist
 #	passivedns/files
 #	passivedns/files/pkg-message.in
 #	passivedns/files/passivedns.in
+#	passivedns/Makefile
+#	passivedns/pkg-descr
+#	passivedns/pkg-plist
 #	passivedns/distinfo
 #
 echo c - passivedns
 mkdir -p passivedns > /dev/null 2>&1
-echo x - passivedns/Makefile
-sed 's/^X//' >passivedns/Makefile << '93c7f91f80d38ca0e833395c351f6029'
-X# $FreeBSD$
-X
-XPORTNAME=	passivedns
-XDISTVERSION= ${GH_COMMIT}
-XCATEGORIES=	security
-XDISTFILES=	gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz
-X
-XMAINTAINER=	shadowbq@gmail.com
-XCOMMENT=	Network sniffer that logs DNS replies for use in passive DNS setups
-X
-XLICENSE=	GPLv2
-X
-XLIB_DEPENDS=	libldns.so:${PORTSDIR}/dns/ldns
-X
-XUSE_GITHUB=	yes
-XGH_ACCOUNT=	gamelinux
-XGH_PROJECT=	passivedns
-XGH_TAG=		${GH_COMMIT}
-XGH_COMMIT=	a6c7e26
-X
-XSUB_FILES=	pkg-message
-X
-XUSES=		gmake libtool
-XUSE_AUTOTOOLS=	aclocal autoconf autoheader automake
-XAUTOMAKE_ARGS=	--add-missing
-X
-XGNU_CONFIGURE=	yes
-XCONFIGURE_ARGS=	--with-ldns-libraries=${PREFIX}/lib
-XCONFIGURE_ARGS+= --with-ldns-includes=${PREFIX}/include
-X
-XUSE_RC_SUBR=	passivedns
-X
-X.include <bsd.port.options.mk>
-X
-Xdo-install:
-X	${INSTALL_PROGRAM} ${WRKSRC}/src/passivedns \
-X		${STAGEDIR}${PREFIX}/bin
-X	${MKDIR} ${STAGEDIR}/var/log/passivedns
-X
-X.include <bsd.port.mk>
-93c7f91f80d38ca0e833395c351f6029
-echo x - passivedns/pkg-descr
-sed 's/^X//' >passivedns/pkg-descr << 'c430299ca93fd028e05a16771d1fb350'
-XA tool to collect DNS records passively to aid Incident handling, Network
-XSecurity Monitoring (NSM) and general digital forensics.
-X
-XPassiveDNS sniffs traffic from an interface or reads a pcap-file and outputs
-Xthe DNS-server answers to a log file. PassiveDNS can cache/aggregate duplicate
-XDNS answers in-memory, limiting the amount of data in the logfile without
-Xlosing the essense in the DNS answer.
-X
-X(c)2011-2012  -  Edward Bjarte Fjellskal
-X
-XWWW: https://github.com/gamelinux/passivedns
-c430299ca93fd028e05a16771d1fb350
-echo x - passivedns/pkg-plist
-sed 's/^X//' >passivedns/pkg-plist << '7552bdacf3fee99c7d70367b9adbfbb3'
-Xbin/passivedns
-X@dir(root,wheel,750) /var/log/passivedns
-7552bdacf3fee99c7d70367b9adbfbb3
 echo c - passivedns/files
 mkdir -p passivedns/files > /dev/null 2>&1
 echo x - passivedns/files/pkg-message.in
@@ -140,11 +78,73 @@ X: ${passivedns_logdir="/var/log/passivedns"}
 X: ${passivedns_fields="SMcsCQTAtn"}
 X: ${passivedns_flags=""}
 X
-Xcommand_args="-i ${passivedns_interface} -l ${passivedns_logdir} -f ${passivedns_fields} ${passivedns_flags} -D"
+Xcommand_args="-i ${passivedns_interface} -l ${passivedns_logdir}/passivedns.log -f ${passivedns_fields} ${passivedns_flags} -D"
 X
 Xrun_rc_command "$1"
 X
 4ee0bb138a8cd981226c537765433a1e
+echo x - passivedns/Makefile
+sed 's/^X//' >passivedns/Makefile << '93c7f91f80d38ca0e833395c351f6029'
+X# $FreeBSD$
+X
+XPORTNAME=	passivedns
+XDISTVERSION= ${GH_COMMIT}
+XCATEGORIES=	security
+XDISTFILES=	gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz
+X
+XMAINTAINER=	shadowbq@gmail.com
+XCOMMENT=	Network sniffer that logs DNS replies for use in passive DNS setups
+X
+XLICENSE=	GPLv2
+X
+XLIB_DEPENDS=	libldns.so:${PORTSDIR}/dns/ldns
+X
+XUSE_GITHUB=	yes
+XGH_ACCOUNT=	gamelinux
+XGH_PROJECT=	passivedns
+XGH_TAG=		${GH_COMMIT}
+XGH_COMMIT=	a6c7e26
+X
+XSUB_FILES=	pkg-message
+X
+XUSES=		gmake libtool
+XUSE_AUTOTOOLS=	aclocal autoconf autoheader automake
+XAUTOMAKE_ARGS=	--add-missing
+X
+XGNU_CONFIGURE=	yes
+XCONFIGURE_ARGS=	--with-ldns-libraries=${PREFIX}/lib
+XCONFIGURE_ARGS+= --with-ldns-includes=${PREFIX}/include
+X
+XUSE_RC_SUBR=	passivedns
+X
+X.include <bsd.port.options.mk>
+X
+Xdo-install:
+X	${INSTALL_PROGRAM} ${WRKSRC}/src/passivedns \
+X		${STAGEDIR}${PREFIX}/bin
+X	${MKDIR} ${STAGEDIR}/var/log/passivedns
+X
+X.include <bsd.port.mk>
+93c7f91f80d38ca0e833395c351f6029
+echo x - passivedns/pkg-descr
+sed 's/^X//' >passivedns/pkg-descr << 'c430299ca93fd028e05a16771d1fb350'
+XA tool to collect DNS records passively to aid Incident handling, Network
+XSecurity Monitoring (NSM) and general digital forensics.
+X
+XPassiveDNS sniffs traffic from an interface or reads a pcap-file and outputs
+Xthe DNS-server answers to a log file. PassiveDNS can cache/aggregate duplicate
+XDNS answers in-memory, limiting the amount of data in the logfile without
+Xlosing the essense in the DNS answer.
+X
+X(c)2011-2012  -  Edward Bjarte Fjellskal
+X
+XWWW: https://github.com/gamelinux/passivedns
+c430299ca93fd028e05a16771d1fb350
+echo x - passivedns/pkg-plist
+sed 's/^X//' >passivedns/pkg-plist << '7552bdacf3fee99c7d70367b9adbfbb3'
+Xbin/passivedns
+X@dir(root,wheel,750) /var/log/passivedns
+7552bdacf3fee99c7d70367b9adbfbb3
 echo x - passivedns/distinfo
 sed 's/^X//' >passivedns/distinfo << 'f564aeea3afc106ff3fbdd9e9da25d33'
 XSHA256 (gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz) = 6196cb863c8fcd352e4c3019053530c7ac75656a5c43d11be6774eb9115be5c7
