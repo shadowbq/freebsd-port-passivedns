@@ -43,7 +43,7 @@ load_rc_config $name
 : ${passivedns_fields="SMcsCQTAtn"}
 : ${passivedns_flags=""}
 
-command_args="-i ${passivedns_interface} -l ${passivedns_logdir} -f ${passivedns_fields} ${passivedns_flags} -D"
+command_args="-i ${passivedns_interface} -l ${passivedns_logdir}/passivedns.log -f ${passivedns_fields} ${passivedns_flags} -D"
 
 run_rc_command "$1"
 
