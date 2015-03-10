@@ -1,0 +1,10 @@
+***********************************
+* !!!!!!!!!!! WARNING !!!!!!!!!!! *
+***********************************
+
+A startup script 'passivedns' was installed in /usr/local/etc/rc.d/.  Enable 
+the script in /etc/rc.conf using the usual rc.subr syntax.  See rc.conf(5) 
+or go to the FreeBSD Handbook - (http://goo.gl/9WboJZ)
+
+Type "passivedns -h" on the commandline for usage instructions.
+

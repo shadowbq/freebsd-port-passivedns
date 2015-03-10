@@ -1,0 +1,154 @@
+# This is a shell archive.  Save it in a file, remove anything before
+# this line, and then unpack it by entering "sh file".  Note, it may
+# create directories; files and directories will be owned by you and
+# have default permissions.
+#
+# This archive contains:
+#
+#	passivedns
+#	passivedns/Makefile
+#	passivedns/pkg-descr
+#	passivedns/pkg-plist
+#	passivedns/files
+#	passivedns/files/pkg-message.in
+#	passivedns/files/passivedns.in
+#	passivedns/distinfo
+#
+echo c - passivedns
+mkdir -p passivedns > /dev/null 2>&1
+echo x - passivedns/Makefile
+sed 's/^X//' >passivedns/Makefile << '93c7f91f80d38ca0e833395c351f6029'
+X# $FreeBSD$
+X
+XPORTNAME=	passivedns
+XDISTVERSION= ${GH_COMMIT}
+XCATEGORIES=	security
+XDISTFILES=	gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz
+X
+XMAINTAINER=	shadowbq@gmail.com
+XCOMMENT=	Network sniffer that logs DNS replies for use in passive DNS setups
+X
+XLICENSE=	GPLv2
+X
+XLIB_DEPENDS=	libldns.so:${PORTSDIR}/dns/ldns
+X
+XUSE_GITHUB=	yes
+XGH_ACCOUNT=	gamelinux
+XGH_PROJECT=	passivedns
+XGH_TAG=		${GH_COMMIT}
+XGH_COMMIT=	a6c7e26
+X
+XSUB_FILES=	pkg-message
+X
+XUSES=		gmake libtool
+XUSE_AUTOTOOLS=	aclocal autoconf autoheader automake
+XAUTOMAKE_ARGS=	--add-missing
+X
+XGNU_CONFIGURE=	yes
+XCONFIGURE_ARGS=	--with-ldns-libraries=${PREFIX}/lib
+XCONFIGURE_ARGS+= --with-ldns-includes=${PREFIX}/include
+X
+XUSE_RC_SUBR=	passivedns
+X
+X.include <bsd.port.options.mk>
+X
+Xdo-install:
+X	${INSTALL_PROGRAM} ${WRKSRC}/src/passivedns \
+X		${STAGEDIR}${PREFIX}/bin
+X	${MKDIR} ${STAGEDIR}/var/log/passivedns
+X
+X.include <bsd.port.mk>
+93c7f91f80d38ca0e833395c351f6029
+echo x - passivedns/pkg-descr
+sed 's/^X//' >passivedns/pkg-descr << 'c430299ca93fd028e05a16771d1fb350'
+XA tool to collect DNS records passively to aid Incident handling, Network
+XSecurity Monitoring (NSM) and general digital forensics.
+X
+XPassiveDNS sniffs traffic from an interface or reads a pcap-file and outputs
+Xthe DNS-server answers to a log file. PassiveDNS can cache/aggregate duplicate
+XDNS answers in-memory, limiting the amount of data in the logfile without
+Xlosing the essense in the DNS answer.
+X
+X(c)2011-2012  -  Edward Bjarte Fjellskal
+X
+XWWW: https://github.com/gamelinux/passivedns
+c430299ca93fd028e05a16771d1fb350
+echo x - passivedns/pkg-plist
+sed 's/^X//' >passivedns/pkg-plist << '7552bdacf3fee99c7d70367b9adbfbb3'
+Xbin/passivedns
+X@dir(root,wheel,750) /var/log/passivedns
+7552bdacf3fee99c7d70367b9adbfbb3
+echo c - passivedns/files
+mkdir -p passivedns/files > /dev/null 2>&1
+echo x - passivedns/files/pkg-message.in
+sed 's/^X//' >passivedns/files/pkg-message.in << 'ec1839006dea03d52411f963439537a5'
+X***********************************
+X* !!!!!!!!!!! WARNING !!!!!!!!!!! *
+X***********************************
+X
+XA startup script 'passivedns' was installed in /usr/local/etc/rc.d/.  Enable 
+Xthe script in /etc/rc.conf using the usual rc.subr syntax.  See rc.conf(5) 
+Xor go to the FreeBSD Handbook - (http://goo.gl/9WboJZ)
+X
+XType "passivedns -h" on the commandline for usage instructions.
+X
+ec1839006dea03d52411f963439537a5
+echo x - passivedns/files/passivedns.in
+sed 's/^X//' >passivedns/files/passivedns.in << '4ee0bb138a8cd981226c537765433a1e'
+X#!/bin/sh
+X
+X# $FreeBSD$
+X#
+X# PROVIDE: passivedns
+X# REQUIRE: DAEMON
+X# BEFORE: LOGIN
+X# KEYWORD: shutdown
+X
+X# Add the following lines to /etc/rc.conf to enable passivedns:
+X# passivedns_enable (bool):	Set to YES to enable passivedns
+X# 				Default: NO
+X# passivedns_interface (str):	
+X#				Default: none - MUST BE SET
+X# passivedns_logdir (str):   	Logging Directory
+X#               Default: "/var/log/passivedns"
+X# passivedns_fields (str):   	Passive DNS Fields to log
+X#               Default: "SMcsCQTAtn"
+X# passivedns_flags (str):		Extra flags passed to passivedns (-D is always passed)
+X#				Default: none
+X
+X. /etc/rc.subr
+X
+Xname="passivedns"
+Xrcvar=passivedns_enable
+X
+Xcommand="/usr/local/bin/passivedns"
+X
+Xstart_precmd=start_precmd
+X
+Xstart_precmd()
+X{
+X	if [ -z "${passivedns_interface}" ]; then
+X		err 1 "passivedns_interface must set."
+X	fi
+X}
+X
+X# set some defaults
+Xload_rc_config $name
+X
+X: ${passivedns_enable="NO"}
+X: ${passivedns_logdir="/var/log/passivedns"}
+X: ${passivedns_fields="SMcsCQTAtn"}
+X: ${passivedns_flags=""}
+X
+Xcommand_args="-i ${passivedns_interface} -l ${passivedns_logdir} -f ${passivedns_fields} ${passivedns_flags} -D"
+X
+Xrun_rc_command "$1"
+X
+4ee0bb138a8cd981226c537765433a1e
+echo x - passivedns/distinfo
+sed 's/^X//' >passivedns/distinfo << 'f564aeea3afc106ff3fbdd9e9da25d33'
+XSHA256 (gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz) = 6196cb863c8fcd352e4c3019053530c7ac75656a5c43d11be6774eb9115be5c7
+XSIZE (gamelinux-passivedns-1.1.3-60-ga6c7e26.tar.gz) = 51318
+f564aeea3afc106ff3fbdd9e9da25d33
+exit
+
