@@ -16,6 +16,10 @@
 #               Default: "/var/log/passivedns"
 # passivedns_fields (str):   	Passive DNS Fields to log
 #               Default: "SMcsCQTAtn"
+# passivedns_user (str):   	Passive DNS user to drop to
+#               Default: "root"
+# passivedns_group (str):   	Passive DNS group to drop to
+#               Default: "wheel"
 # passivedns_flags (str):		Extra flags passed to passivedns (-D is always passed)
 #				Default: none
 
@@ -41,9 +45,10 @@ load_rc_config $name
 : ${passivedns_enable="NO"}
 : ${passivedns_logdir="/var/log/passivedns"}
 : ${passivedns_fields="SMcsCQTAtn"}
+: ${passivedns_user="root"}
+: ${passivedns_group="wheel"}
 : ${passivedns_flags=""}
 
-command_args="-i ${passivedns_interface} -l ${passivedns_logdir}/passivedns.log -f ${passivedns_fields} ${passivedns_flags} -D"
+command_args="-i ${passivedns_interface} -L ${passivedns_logdir}/passivedns.log -l ${passivedns_logdir}/passivedns.log -f ${passivedns_fields} -u ${passivedns_user} -g ${passivedns_group} ${passivedns_flags} -D"
 
 run_rc_command "$1"
-
